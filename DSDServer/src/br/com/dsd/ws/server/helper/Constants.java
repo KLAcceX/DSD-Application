@@ -8,4 +8,6 @@ package br.com.dsd.ws.server.helper;
  */
 public class Constants {
 
+	public static final String[] COLUNAS_TABELA_INFO_USUARIOS = { "ID", "Apelido", "Nome", "E-mail" };
+
 }

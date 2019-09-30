@@ -16,6 +16,6 @@ public class Logger {
 	 * @param texto
 	 */
 	public static void log(String text) {
-		Main.getPnlConsole().getTxtaConsole().append(text);
+		Main.getPnlForm().getTxtLog().append(text);
 	}
 }
