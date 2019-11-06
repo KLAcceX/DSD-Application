@@ -6,8 +6,6 @@ import static br.com.dsd.app.client.helper.IconConstants.TV_ON;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 

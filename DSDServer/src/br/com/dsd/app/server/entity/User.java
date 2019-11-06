@@ -2,15 +2,25 @@ package br.com.dsd.app.server.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Classe que representa os usuários
  * 
  * @author kl
  */
+@Entity
+@Table(name = "tb_user")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -3769038376481481901L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nickname;
 	private String name;
@@ -18,9 +28,22 @@ public class User implements Serializable {
 	private String email;
 	private Character status;
 
+	public User() {
+
+	}
+
 	public User(Integer id, String nickname, String name, String surname, String email, Character status) {
 		super();
 		this.id = id;
+		this.nickname = nickname;
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.status = status;
+	}
+	
+	public User(String nickname, String name, String surname, String email, Character status) {
+		super();
 		this.nickname = nickname;
 		this.name = name;
 		this.surname = surname;
@@ -58,6 +81,10 @@ public class User implements Serializable {
 
 	public void setSurname(String surname) {
 		this.surname = surname;
+	}
+
+	public String getEntireName() {
+		return this.name + " " + this.surname;
 	}
 
 	public String getEmail() {
