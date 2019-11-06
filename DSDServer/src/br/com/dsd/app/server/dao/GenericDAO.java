@@ -1,4 +1,4 @@
-package br.com.dsd.app.client.dao;
+package br.com.dsd.app.server.dao;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import br.com.dsd.app.client.helper.HibernateUtil;
+import br.com.dsd.app.server.helper.HibernateUtil;
 
 public class GenericDAO {
 

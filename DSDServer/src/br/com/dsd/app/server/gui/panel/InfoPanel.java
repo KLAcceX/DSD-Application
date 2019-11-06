@@ -1,11 +1,16 @@
 package br.com.dsd.app.server.gui.panel;
 
-import static br.com.dsd.app.server.helper.Constants.*;
-
+import static br.com.dsd.app.server.helper.Constants.TAB_GROUP;
+import static br.com.dsd.app.server.helper.Constants.TAB_LOG;
+import static br.com.dsd.app.server.helper.Constants.TAB_USER;
+import static br.com.dsd.app.server.helper.Constants.TOOLTIP_TAB_GROUP;
+import static br.com.dsd.app.server.helper.Constants.TOOLTIP_TAB_LOG;
+import static br.com.dsd.app.server.helper.Constants.TOOLTIP_TAB_USER;
 import static br.com.dsd.app.server.helper.IconConstants.ADD_USER;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -17,6 +22,9 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
+import br.com.dsd.app.server.dao.GenericDAO;
+import br.com.dsd.app.server.entity.Group;
+import br.com.dsd.app.server.entity.User;
 import br.com.dsd.app.server.helper.Constants;
 import br.com.dsd.app.server.helper.IconUtil;
 
@@ -30,8 +38,9 @@ public class InfoPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private JTable table;
 	private JTextArea txtLog;
+	private JTable tblUsers;
+	private JTable tblGroups;
 
 	/**
 	 * Create the panel.
@@ -61,30 +70,94 @@ public class InfoPanel extends JPanel {
 
 		JPanel pnlUserAction = new JPanel();
 		pnlUserAction.setBackground(Color.WHITE);
-		FlowLayout flowLayout = (FlowLayout) pnlUserAction.getLayout();
-		flowLayout.setAlignment(FlowLayout.RIGHT);
+		FlowLayout flowLayoutUser = (FlowLayout) pnlUserAction.getLayout();
+		flowLayoutUser.setAlignment(FlowLayout.RIGHT);
 		pnlUsers.add(pnlUserAction);
 
-		JButton btnAdicionar = new JButton();
+		JButton btnAdicionarUser = new JButton();
 		//TODO: Método para Adicionar o Usuário
-		btnAdicionar.setBorder(BorderFactory.createEmptyBorder());
-		btnAdicionar.setBackground(Color.WHITE);
-		btnAdicionar.setIcon(IconUtil.getIcon(ADD_USER));
+		btnAdicionarUser.setBorder(BorderFactory.createEmptyBorder());
+		btnAdicionarUser.setBackground(Color.WHITE);
+		btnAdicionarUser.setIcon(IconUtil.getIcon(ADD_USER));
 
-		pnlUserAction.add(btnAdicionar);
+		pnlUserAction.add(btnAdicionarUser);
 
 		JScrollPane sclUsers = new JScrollPane();
 		pnlUsers.add(sclUsers);
 
-		table = new JTable();
-		table.setBackground(Color.WHITE);
-		sclUsers.setViewportView(table);
-		table.setModel(new DefaultTableModel(new Object[][] {}, Constants.COLUNAS_TABELA_INFO_USUARIOS));
+		tblUsers = new JTable();
+		tblUsers.setBackground(Color.WHITE);
+		sclUsers.setViewportView(tblUsers);
+		DefaultTableModel userTableModel = new DefaultTableModel(new Object[][] { }, Constants.COLUNAS_TABELA_INFO_USUARIOS);
+		tblUsers.setModel(userTableModel);
+		
+		JPanel pnlGroups = new JPanel();
+		tabbedPane.addTab(TAB_GROUP, null, pnlGroups, TOOLTIP_TAB_GROUP);
+		pnlGroups.setLayout(new BoxLayout(pnlGroups, BoxLayout.Y_AXIS));
 
+		JPanel pnlGroupAction = new JPanel();
+		pnlGroupAction.setBackground(Color.WHITE);
+		FlowLayout flowLayoutGroup = (FlowLayout) pnlUserAction.getLayout();
+		flowLayoutGroup.setAlignment(FlowLayout.RIGHT);
+		pnlGroups.add(pnlGroupAction);
+
+		JButton btnAdicionarGroup = new JButton();
+		//TODO: Método para Adicionar o Usuário
+		btnAdicionarGroup.setBorder(BorderFactory.createEmptyBorder());
+		btnAdicionarGroup.setBackground(Color.WHITE);
+		btnAdicionarGroup.setIcon(IconUtil.getIcon(ADD_USER));
+
+		pnlGroupAction.add(btnAdicionarGroup);
+
+		JScrollPane sclGroups = new JScrollPane();
+		pnlGroups.add(sclGroups);
+
+		tblGroups = new JTable();
+		tblGroups.setBackground(Color.WHITE);
+		sclGroups.setViewportView(tblGroups);
+		DefaultTableModel groupTableModel = new DefaultTableModel(new Object[][] { }, Constants.COLUNAS_TABELA_INFO_USUARIOS);
+		tblGroups.setModel(groupTableModel);
+		
+		carregarUsuarios();
+		carregarGrupos();
 	}
 
 	public JTextArea getTxtLog() {
 		return txtLog;
+	}
+	
+	private void carregarUsuarios() {
+		List<User> users = (List<User>) GenericDAO.list(User.class);
+		
+		for(User user : users) {
+			adicionarUsuarioTabela(user);
+		}
+	}
+	
+	private void adicionarUsuarioTabela(User user) {
+		Object[] row = new Object[Constants.COLUNAS_TABELA_INFO_USUARIOS.length];
+		row[0] = user.getId();
+		row[1] = user.getNickname();
+		row[2] = user.getEntireName();
+		row[3] = user.getEmail();
+		
+		((DefaultTableModel) tblUsers.getModel()).insertRow(tblUsers.getRowCount(), row);
+	}
+	
+	private void carregarGrupos() {
+		List<Group> groups = (List<Group>) GenericDAO.list(Group.class);
+		
+		for(Group group : groups) {
+			adicionarGrupoTabela(group);
+		}
+	}
+	
+	private void adicionarGrupoTabela(Group group) {
+		Object[] row = new Object[Constants.COLUNAS_TABELA_INFO_GRUPOS.length];
+		row[0] = group.getId();
+		row[1] = group.getName();
+		
+		((DefaultTableModel) tblGroups.getModel()).insertRow(tblGroups.getRowCount(), row);
 	}
 
 }

@@ -9,6 +9,7 @@ package br.com.dsd.app.server.helper;
 public class Constants {
 
 	public static final String[] COLUNAS_TABELA_INFO_USUARIOS = { "ID", "Apelido", "Nome", "E-mail" };
+	public static final String[] COLUNAS_TABELA_INFO_GRUPOS = { "ID", "Nome" };
 	public static final String FIELD_IP = "IP";
 	public static final String FIELD_PORT = "Port";
 	public static final String BUTTON_START = "Start";
@@ -17,5 +18,7 @@ public class Constants {
 	public static final String TOOLTIP_TAB_LOG = "Server Log";
 	public static final String TAB_USER = "User";
 	public static final String TOOLTIP_TAB_USER = "Server User";
+	public static final String TAB_GROUP = "Group";
+	public static final String TOOLTIP_TAB_GROUP = "Server Group";
 
 }
