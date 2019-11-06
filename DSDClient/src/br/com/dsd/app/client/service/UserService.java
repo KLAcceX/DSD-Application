@@ -3,6 +3,7 @@ package br.com.dsd.app.client.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.dsd.app.client.dao.GenericDAO;
 import br.com.dsd.app.client.entity.User;
 
 public class UserService {
@@ -20,11 +21,7 @@ public class UserService {
 	}
 
 	public List<User> getList() {
-		List<User> list = new ArrayList<User>();
-		
-		for(int i = 0; i < 20; i++) 
-			list.add(new User(i, "nickname" + i, "name" + i, "surname" + i, "email" + i, i % 2 == 0 ? 'A' : 'I'));
-		
+		List<User> list = (List<User>) GenericDAO.list(User.class);
 		return list;
 	}
 

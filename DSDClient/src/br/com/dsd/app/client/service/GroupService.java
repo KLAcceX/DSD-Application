@@ -3,7 +3,9 @@ package br.com.dsd.app.client.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.dsd.app.client.dao.GenericDAO;
 import br.com.dsd.app.client.entity.Group;
+import br.com.dsd.app.client.entity.User;
 
 public class GroupService {
 
@@ -20,12 +22,9 @@ public class GroupService {
 	}
 
 	public List<Group> getList() {
-		List<Group> list = new ArrayList<Group>();
-		
-		for(int i = 0; i < 20; i++) 
-			list.add(new Group(i, "name" + i));
-		
+		List<Group> list = (List<Group>) GenericDAO.list(Group.class);
 		return list;
+		
 	}
 
 }

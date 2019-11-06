@@ -15,6 +15,10 @@ public class Group {
 	private Integer id;
 	private String name;
 
+	public Group() {
+		super();
+	}
+
 	public Group(Integer id, String name) {
 		super();
 		this.id = id;
