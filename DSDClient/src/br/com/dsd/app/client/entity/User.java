@@ -50,6 +50,14 @@ public class User implements Serializable {
 		this.email = email;
 		this.status = status;
 	}
+	
+	public User(String nickname, String name, String surname, String email) {
+		super();
+		this.nickname = nickname;
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+	}
 
 	public Integer getId() {
 		return id;

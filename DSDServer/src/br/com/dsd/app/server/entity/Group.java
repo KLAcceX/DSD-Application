@@ -11,16 +11,20 @@ import javax.persistence.Table;
 public class Group {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
 
+	public Group() {
+		super();
+	}
+	
 	public Group(Integer id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
-	
+
 	public Group(String name) {
 		super();
 		this.name = name;
