@@ -5,6 +5,9 @@ import static br.com.dsd.app.client.helper.IconConstants.TV_ON;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -13,8 +16,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import br.com.dsd.app.client.entity.User;
 import br.com.dsd.app.client.entity.Group;
+import br.com.dsd.app.client.entity.User;
 import br.com.dsd.app.client.gui.main.panel.ChatPanel;
 import br.com.dsd.app.client.helper.IconUtil;
 
@@ -33,6 +36,7 @@ public class ContactLabel extends JPanel {
 		JLabel name = new JLabel(cName, JLabel.LEFT);
 		name.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 		setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		this.setPreferredSize(new Dimension(getWidth(), 30));
 		add(name, BorderLayout.CENTER);
 
 		if (status != null) {
@@ -85,6 +89,7 @@ public class ContactLabel extends JPanel {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+				
 			}
 
 			@Override
