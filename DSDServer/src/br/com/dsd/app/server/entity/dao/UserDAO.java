@@ -1,4 +1,4 @@
-package br.com.dsd.app.client.entity;
+package br.com.dsd.app.server.entity.dao;
 
 import java.io.Serializable;
 
@@ -15,7 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tb_user")
-public class User implements Serializable {
+public class UserDAO implements Serializable {
 
 	private static final long serialVersionUID = -3769038376481481901L;
 
@@ -28,11 +28,11 @@ public class User implements Serializable {
 	private String email;
 	private Character status;
 
-	public User() {
+	public UserDAO() {
 
 	}
 
-	public User(Integer id, String nickname, String name, String surname, String email, Character status) {
+	public UserDAO(Integer id, String nickname, String name, String surname, String email, Character status) {
 		super();
 		this.id = id;
 		this.nickname = nickname;
@@ -42,7 +42,7 @@ public class User implements Serializable {
 		this.status = status;
 	}
 	
-	public User(String nickname, String name, String surname, String email, Character status) {
+	public UserDAO(String nickname, String name, String surname, String email, Character status) {
 		super();
 		this.nickname = nickname;
 		this.name = name;
@@ -51,7 +51,7 @@ public class User implements Serializable {
 		this.status = status;
 	}
 	
-	public User(String nickname, String name, String surname, String email) {
+	public UserDAO(String nickname, String name, String surname, String email) {
 		super();
 		this.nickname = nickname;
 		this.name = name;

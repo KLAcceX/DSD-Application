@@ -1,11 +1,8 @@
 package br.com.dsd.app.client.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import br.com.dsd.app.client.dao.GenericDAO;
-import br.com.dsd.app.client.entity.Group;
-import br.com.dsd.app.client.entity.User;
+import br.com.dsd.app.client.entity.dto.GroupDTO;
 
 public class GroupService {
 
@@ -21,10 +18,10 @@ public class GroupService {
 		return service;
 	}
 
-	public List<Group> getList() {
-		List<Group> list = (List<Group>) GenericDAO.list(Group.class);
+	public List<GroupDTO> getList() {
+		List<GroupDTO> list = null;
+		//TODO: recuperar lista de grupos do servidor
 		return list;
-		
 	}
 
 }

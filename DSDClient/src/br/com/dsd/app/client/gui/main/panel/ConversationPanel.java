@@ -17,7 +17,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
-import br.com.dsd.app.client.entity.Message;
+import br.com.dsd.app.client.entity.dto.MessageDTO;
+import br.com.dsd.app.client.entity.dto.UserDTO;
 import br.com.dsd.app.client.gui.frame.MainFrame;
 import br.com.dsd.app.client.helper.DateUtil;
 
@@ -92,7 +93,7 @@ public class ConversationPanel extends JSplitPane {
 	 * @param mensagem
 	 */
 	public void enviarMensagem(String mensagem) {
-		Message message = new Message(MainFrame.getLoggedUser(), new Date(), mensagem);
+		MessageDTO message = new MessageDTO(MainFrame.getInstance().getLoggedUser(), new UserDTO(), new Date(), mensagem);
 		// TODO: ENVIAR MENSAGEM PARA DESTINATÁRIO, MÉTODO RETORNANDO BOOLEAN
 		// CASO TRUE : MENSAGEM ENVIADA
 		// CASO FALSE : MENSAGEM COM ERRO
@@ -107,7 +108,7 @@ public class ConversationPanel extends JSplitPane {
 	 * 
 	 * @param mensagem
 	 */
-	public void adicionarMensagem(Message mensagem) {
+	public void adicionarMensagem(MessageDTO mensagem) {
 		txtChat.setText("[" + mensagem.getSender().getNickname() + " " + DateUtil.getChatDate(mensagem.getSendDate())
 				+ "] : " + mensagem.getText() + "\n");
 	}

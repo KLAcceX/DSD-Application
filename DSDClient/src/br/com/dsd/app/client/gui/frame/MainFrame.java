@@ -16,7 +16,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
-import br.com.dsd.app.client.entity.User;
+import br.com.dsd.app.client.entity.dto.UserDTO;
 import br.com.dsd.app.client.gui.main.panel.ChatPanel;
 import br.com.dsd.app.client.gui.main.panel.ContactsPanel;
 import br.com.dsd.app.client.gui.main.panel.FootPanel;
@@ -36,28 +36,13 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private static MainFrame mainFrame;
-	private static User loggedUser;
+	private static UserDTO loggedUser;
+	private boolean maximized = false;
 
 	private JPanel contentPane;
 	private JSplitPane splitPane;
 	private JScrollPane pnlSclContacts;
 	private JScrollPane pnlSclGroups;
-
-	/**
-	 * Inicia a Aplicação
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainFrame frame = MainFrame.getInstance();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	public static MainFrame getInstance() {
 		if(mainFrame == null)
@@ -68,8 +53,7 @@ public class MainFrame extends JFrame {
 	/**
 	 * Cria a janela
 	 */
-	public MainFrame() {
-		loggedUser = new User(1, "TesteUsuarioLogado", "Nome", "Sobrenome", "EmailBacano", 'A');
+	private MainFrame() {
 		setTitle("DSD-WS-Client");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -145,8 +129,26 @@ public class MainFrame extends JFrame {
 		}
 	}
 
-	public static User getLoggedUser() {
+	public UserDTO getLoggedUser() {
 		return loggedUser;
+	}
+	
+	public void setLoggedUser(UserDTO user) {
+		loggedUser = user;
+	}
+	
+	public void maximize() {
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		maximized = true;
+	}
+	
+	public void minimize() {
+		this.setExtendedState(JFrame.NORMAL);
+		maximized = false;
+	}
+	
+	public boolean isMaximized() {
+		return maximized;
 	}
 
 }

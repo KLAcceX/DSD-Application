@@ -4,7 +4,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
-import br.com.dsd.app.client.entity.Group;
+import br.com.dsd.app.client.entity.dto.GroupDTO;
 import br.com.dsd.app.client.gui.component.ContactLabel;
 import br.com.dsd.app.client.service.GroupService;
 
@@ -22,8 +22,8 @@ public class GroupsPanel extends JPanel {
 		setLayout(new GridLayout(0, 1));
 
 		//TODO: Definir forma de atualizar painel de Grupo
-		for (Group group : GroupService.getInstance().getList()) {
-			add(new ContactLabel(group, chat));
-		}
+//		for (GroupDTO group : GroupService.getInstance().getList()) {
+//			add(new ContactLabel(group, chat));
+//		}
 	}
 }

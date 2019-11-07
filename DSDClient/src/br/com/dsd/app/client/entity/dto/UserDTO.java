@@ -1,26 +1,16 @@
-package br.com.dsd.app.server.entity;
+package br.com.dsd.app.client.entity.dto;
 
 import java.io.Serializable;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * Classe que representa os usuários
  * 
  * @author kl
  */
-@Entity
-@Table(name = "tb_user")
-public class User implements Serializable {
+public class UserDTO implements Serializable {
 
-	private static final long serialVersionUID = -3769038376481481901L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private static final long serialVersionUID = -2583419618774793272L;
+	
 	private Integer id;
 	private String nickname;
 	private String name;
@@ -28,11 +18,11 @@ public class User implements Serializable {
 	private String email;
 	private Character status;
 
-	public User() {
+	public UserDTO() {
 
 	}
 
-	public User(Integer id, String nickname, String name, String surname, String email, Character status) {
+	public UserDTO(Integer id, String nickname, String name, String surname, String email, Character status) {
 		super();
 		this.id = id;
 		this.nickname = nickname;
@@ -42,7 +32,7 @@ public class User implements Serializable {
 		this.status = status;
 	}
 	
-	public User(String nickname, String name, String surname, String email, Character status) {
+	public UserDTO(String nickname, String name, String surname, String email, Character status) {
 		super();
 		this.nickname = nickname;
 		this.name = name;
@@ -51,7 +41,7 @@ public class User implements Serializable {
 		this.status = status;
 	}
 	
-	public User(String nickname, String name, String surname, String email) {
+	public UserDTO(String nickname, String name, String surname, String email) {
 		super();
 		this.nickname = nickname;
 		this.name = name;

@@ -14,8 +14,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import br.com.dsd.app.client.entity.Group;
-import br.com.dsd.app.client.entity.User;
+import br.com.dsd.app.client.entity.dto.GroupDTO;
+import br.com.dsd.app.client.entity.dto.UserDTO;
 import br.com.dsd.app.client.gui.main.panel.ChatPanel;
 import br.com.dsd.app.client.helper.IconUtil;
 
@@ -35,6 +35,7 @@ public class ContactLabel extends JPanel {
 		name.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 		setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		this.setPreferredSize(new Dimension(getWidth(), 30));
+		this.setMaximumSize(new Dimension(getWidth(), 30));
 		add(name, BorderLayout.CENTER);
 
 		if (status != null) {
@@ -50,7 +51,7 @@ public class ContactLabel extends JPanel {
 	 * @param user
 	 * @param chat
 	 */
-	public ContactLabel(User user, ChatPanel chat) {
+	public ContactLabel(UserDTO user, ChatPanel chat) {
 		this(user.getEntireName(), user.getStatus());
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -76,7 +77,7 @@ public class ContactLabel extends JPanel {
 	 * @param group
 	 * @param chat
 	 */
-	public ContactLabel(Group group, ChatPanel chat) {
+	public ContactLabel(GroupDTO group, ChatPanel chat) {
 		this(group.getName(), null);
 		addMouseListener(new MouseAdapter() {
 			@Override

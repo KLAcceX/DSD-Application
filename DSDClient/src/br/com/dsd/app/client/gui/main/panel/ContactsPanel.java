@@ -4,7 +4,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
-import br.com.dsd.app.client.entity.User;
+import br.com.dsd.app.client.entity.dto.UserDTO;
 import br.com.dsd.app.client.gui.component.ContactLabel;
 import br.com.dsd.app.client.service.UserService;
 
@@ -22,8 +22,8 @@ public class ContactsPanel extends JPanel {
 		setLayout(new GridLayout(0, 1));
 		
 		//TODO: Definir forma de atualizar painel de Usuário
-		for (User user : UserService.getInstance().getList()) {
-			add(new ContactLabel(user, chat));
-		}
+//		for (UserDTO user : UserService.getInstance().getList()) {
+//			add(new ContactLabel(user, chat));
+//		}
 	}
 }

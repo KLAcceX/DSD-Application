@@ -1,4 +1,4 @@
-package br.com.dsd.app.client.entity;
+package br.com.dsd.app.server.entity.dao;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,24 +8,24 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tb_group")
-public class Group {
+public class GroupDAO {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
 
-	public Group() {
+	public GroupDAO() {
 		super();
 	}
-
-	public Group(Integer id, String name) {
+	
+	public GroupDAO(Integer id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
-	
-	public Group(String name) {
+
+	public GroupDAO(String name) {
 		super();
 		this.name = name;
 	}

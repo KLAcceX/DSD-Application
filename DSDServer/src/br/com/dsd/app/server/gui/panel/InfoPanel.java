@@ -32,8 +32,8 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import br.com.dsd.app.server.dao.GenericDAO;
-import br.com.dsd.app.server.entity.Group;
-import br.com.dsd.app.server.entity.User;
+import br.com.dsd.app.server.entity.dao.GroupDAO;
+import br.com.dsd.app.server.entity.dao.UserDAO;
 import br.com.dsd.app.server.helper.Constants;
 import br.com.dsd.app.server.helper.IconUtil;
 
@@ -161,7 +161,7 @@ public class InfoPanel extends JPanel {
 		btnAddUser.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				User user = new User(txtUserNickname.getText(), txtUserName.getText(), txtUserSurname.getText(), txtUserEmail.getText());
+				UserDAO user = new UserDAO(txtUserNickname.getText(), txtUserName.getText(), txtUserSurname.getText(), txtUserEmail.getText());
 				GenericDAO.insert(user);
 				getTxtLog().append("Adicionando Usuário");
 				adicionarUsuarioTabela(user);
@@ -242,7 +242,7 @@ public class InfoPanel extends JPanel {
 		btnAddGroup.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Group group = new Group(txtGroupName.getText());
+				GroupDAO group = new GroupDAO(txtGroupName.getText());
 				GenericDAO.insert(group);
 				getTxtLog().append("Adicionando Grupo");
 				adicionarGrupoTabela(group);
@@ -280,14 +280,14 @@ public class InfoPanel extends JPanel {
 	}
 
 	private void carregarUsuarios() {
-		List<User> users = (List<User>) GenericDAO.list(User.class);
+		List<UserDAO> users = (List<UserDAO>) GenericDAO.list(UserDAO.class);
 
-		for (User user : users) {
+		for (UserDAO user : users) {
 			adicionarUsuarioTabela(user);
 		}
 	}
 
-	private void adicionarUsuarioTabela(User user) {
+	private void adicionarUsuarioTabela(UserDAO user) {
 		Object[] row = new Object[Constants.COLUNAS_TABELA_INFO_USUARIOS.length];
 		row[0] = user.getNickname();
 		row[1] = user.getEntireName();
@@ -297,14 +297,14 @@ public class InfoPanel extends JPanel {
 	}
 
 	private void carregarGrupos() {
-		List<Group> groups = (List<Group>) GenericDAO.list(Group.class);
+		List<GroupDAO> groups = (List<GroupDAO>) GenericDAO.list(GroupDAO.class);
 
-		for (Group group : groups) {
+		for (GroupDAO group : groups) {
 			adicionarGrupoTabela(group);
 		}
 	}
 
-	private void adicionarGrupoTabela(Group group) {
+	private void adicionarGrupoTabela(GroupDAO group) {
 		Object[] row = new Object[Constants.COLUNAS_TABELA_INFO_GRUPOS.length];
 		row[0] = group.getName();
 

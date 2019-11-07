@@ -24,6 +24,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import br.com.dsd.app.client.executable.Application;
 import br.com.dsd.app.client.gui.component.ColoredMenuBar;
 import br.com.dsd.app.client.helper.IconUtil;
 
@@ -71,6 +72,12 @@ public class MenuPanel extends JPanel {
 		menuBar.add(menuSettings);
 
 		menuExit = new JMenu(MENU_EXIT);
+		menuExit.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Application.changeFrameLogin();
+			}
+		});
 		menuExit.setIcon(IconUtil.getIcon(EXIT));
 		menuBar.add(menuExit);
 

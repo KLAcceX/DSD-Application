@@ -32,22 +32,6 @@ public class Main extends JFrame {
 	private static JPanel pnlInfo;
 
 	/**
-	 * Inicia a Aplicação
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Main frame = new Main();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Cria a janela
 	 */
 	public Main() {

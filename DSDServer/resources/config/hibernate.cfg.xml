@@ -9,7 +9,7 @@
 		
 		<property name="connection.pool_size">1</property>
 		<property name="show_sql">true</property>
-		<mapping class="br.com.dsd.app.server.entity.User"/>
-		<mapping class="br.com.dsd.app.server.entity.Group"/>
+		<mapping class="br.com.dsd.app.server.entity.dao.UserDAO"/>
+		<mapping class="br.com.dsd.app.server.entity.dao.GroupDAO"/>
 	</session-factory>
 </hibernate-configuration>
