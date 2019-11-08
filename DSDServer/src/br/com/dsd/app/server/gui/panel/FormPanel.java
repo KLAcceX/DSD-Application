@@ -11,10 +11,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -137,10 +141,11 @@ public class FormPanel extends JPanel {
 	private class ButtonListener extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			//TODO: Realizar abertura do Servidor
+			
 			switch(btnServer.getMnemonic()) {
 				case 73:
 					btnServer.setMnemonic(80);
+					starterServer();
 					btnServer.setText(BUTTON_STOP);
 					Logger.log("Iniciar clicado.");
 					break;
@@ -151,6 +156,25 @@ public class FormPanel extends JPanel {
 					break;
 			}
 		}
+		
+		private void starterServer () {
+			ServerSocket server = null;
+			try {
+				server = new ServerSocket(5000);
+				JOptionPane.showMessageDialog(null,"Servidor Iniciado.");
+				
+			} catch (IOException e) {
+				try {
+					if(server != null && !server.isClosed())
+						server.close();			
+				} catch (IOException e1) {
+					
+				}
+				JOptionPane.showMessageDialog(null, " A porta está ocupada! Tente outra ou o servidor não irá inicializar.");
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 }
