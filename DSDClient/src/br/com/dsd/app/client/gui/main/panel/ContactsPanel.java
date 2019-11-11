@@ -49,5 +49,7 @@ public class ContactsPanel extends JPanel {
 			Map.Entry<String, UserDTO> entry = (Map.Entry<String, UserDTO>) it.next();
 			add(new ContactLabel(entry.getValue(), chat));
 		}
+		revalidate();
+		repaint();
 	}
 }

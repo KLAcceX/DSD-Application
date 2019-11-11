@@ -49,6 +49,8 @@ public class GroupsPanel extends JPanel {
 			Map.Entry<String, GroupDTO> entry = (Map.Entry<String, GroupDTO>) it.next();
 			add(new ContactLabel(entry.getValue(), chat));
 		}
+		revalidate();
+		repaint();
 	}
 
 }
