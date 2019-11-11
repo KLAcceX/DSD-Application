@@ -1,4 +1,4 @@
-package br.com.dsd.app.server.entity.dto;
+package br.com.dsd.app.dto;
 
 import java.io.Serializable;
 

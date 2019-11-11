@@ -4,26 +4,30 @@ import static br.com.dsd.app.server.helper.Constants.BUTTON_START;
 import static br.com.dsd.app.server.helper.Constants.BUTTON_STOP;
 import static br.com.dsd.app.server.helper.Constants.FIELD_IP;
 import static br.com.dsd.app.server.helper.Constants.FIELD_PORT;
+import static br.com.dsd.app.server.helper.Constants.MAX_PORT;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
-import br.com.dsd.app.server.message.Logger;
+import br.com.dsd.app.server.gui.dialog.Message;
+import br.com.dsd.app.server.socket.Server;
 
 /**
  * Painel que contem as informações do servidor
@@ -31,15 +35,15 @@ import br.com.dsd.app.server.message.Logger;
  * @author kl
  *
  */
-public class FormPanel extends JPanel {
-	
+public class SocketPanel extends JPanel {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private JTextField txtIp;
 	private JTextField txtPort;
 	private JButton btnServer;
 
-	public FormPanel() {
+	public SocketPanel() {
 		generateLayout();
 		generateFields();
 		generateButton();
@@ -78,9 +82,20 @@ public class FormPanel extends JPanel {
 		add(lblIp, gbc_lblIp);
 
 		txtIp = new JTextField();
+		txtIp.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		txtIp.setEditable(false);
+		txtIp.setEnabled(false);
 		txtIp.setHorizontalAlignment(SwingConstants.RIGHT);
 		txtIp.setBackground(Color.LIGHT_GRAY);
 		txtIp.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
+
+		try {
+			InetAddress inet = InetAddress.getLocalHost();
+			txtIp.setText(inet.getHostAddress());
+		} catch (UnknownHostException e) {
+			txtIp.setEnabled(true);
+		}
+
 		GridBagConstraints gbc_txtIp = new GridBagConstraints();
 		gbc_txtIp.anchor = GridBagConstraints.SOUTH;
 		gbc_txtIp.insets = new Insets(0, 0, 5, 5);
@@ -103,6 +118,23 @@ public class FormPanel extends JPanel {
 		add(lblPort, gbc_lblPort);
 
 		txtPort = new JTextField();
+		txtPort.setDocument(new PlainDocument() {
+			private static final long serialVersionUID = 1L;
+
+			public void insertString(int offset, String string, AttributeSet attr) throws BadLocationException {
+				string = string.replaceAll("[^0-9]", "");
+
+				if (string == null || string.isEmpty())
+					return;
+
+				String value = txtPort.getText() + string;
+
+				if (Integer.parseInt(value) <= MAX_PORT) {
+					super.insertString(offset, string, attr);
+				}
+			}
+		});
+		txtPort.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		txtPort.setHorizontalAlignment(SwingConstants.RIGHT);
 		txtPort.setBackground(Color.LIGHT_GRAY);
 		txtPort.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
@@ -113,7 +145,7 @@ public class FormPanel extends JPanel {
 		gbc_txtPort.gridx = 7;
 		gbc_txtPort.gridy = 1;
 		add(txtPort, gbc_txtPort);
-		txtPort.setColumns(10);
+		txtPort.setColumns(5);
 	}
 
 	/**
@@ -141,40 +173,24 @@ public class FormPanel extends JPanel {
 	private class ButtonListener extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
-			switch(btnServer.getMnemonic()) {
-				case 73:
+
+			switch (btnServer.getMnemonic()) {
+			case 73:
+				Server.getInstance(Integer.parseInt(txtPort.getText()));
+				if (Server.isOn()) {
+					txtPort.setEnabled(false);
 					btnServer.setMnemonic(80);
-					starterServer();
 					btnServer.setText(BUTTON_STOP);
-					Logger.log("Iniciar clicado.");
-					break;
-				case 80:
-					btnServer.setMnemonic(73);
-					btnServer.setText(BUTTON_START);
-					Logger.log("Parar clicado.");
-					break;
-			}
-		}
-		
-		private void starterServer () {
-			ServerSocket server = null;
-			try {
-				server = new ServerSocket(5000);
-				JOptionPane.showMessageDialog(null,"Servidor Iniciado.");
-				
-			} catch (IOException e) {
-				try {
-					if(server != null && !server.isClosed())
-						server.close();			
-				} catch (IOException e1) {
-					
 				}
-				JOptionPane.showMessageDialog(null, " A porta está ocupada! Tente outra ou o servidor não irá inicializar.");
-				e.printStackTrace();
+				break;
+			case 80:
+				Server.getInstance(Integer.parseInt(txtPort.getText())).unkeep();
+				txtPort.setEnabled(true);
+				btnServer.setMnemonic(73);
+				btnServer.setText(BUTTON_START);
+				break;
 			}
 		}
-		
 	}
 
 }

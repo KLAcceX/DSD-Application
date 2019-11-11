@@ -1,18 +1,22 @@
-package br.com.dsd.app.server.entity.dto;
+package br.com.dsd.app.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 
 public class MessageDTO implements Serializable {
 
-	private static final long serialVersionUID = 7976707883891601695L;
-	
-	private UserDTO receiver;
-	private UserDTO sender;
+	private static final long serialVersionUID = 3742414013272046137L;
+
+	private String receiver;
+	private String sender;
 	private Date sendDate;
 	private String text;
 
-	public MessageDTO(UserDTO receiver, UserDTO sender, Date sendDate, String text) {
+	public MessageDTO() {
+		super();
+	}
+
+	public MessageDTO(String receiver, String sender, Date sendDate, String text) {
 		super();
 		this.receiver = receiver;
 		this.sender = sender;
@@ -20,19 +24,19 @@ public class MessageDTO implements Serializable {
 		this.text = text;
 	}
 
-	public UserDTO getReceiver() {
+	public String getReceiver() {
 		return receiver;
 	}
 
-	public void setReceiver(UserDTO receiver) {
+	public void setReceiver(String receiver) {
 		this.receiver = receiver;
 	}
 
-	public UserDTO getSender() {
+	public String getSender() {
 		return sender;
 	}
 
-	public void setSender(UserDTO sender) {
+	public void setSender(String sender) {
 		this.sender = sender;
 	}
 

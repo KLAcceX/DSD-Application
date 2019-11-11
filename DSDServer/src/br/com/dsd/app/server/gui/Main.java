@@ -13,7 +13,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import br.com.dsd.app.server.gui.panel.FootPanel;
-import br.com.dsd.app.server.gui.panel.FormPanel;
+import br.com.dsd.app.server.gui.panel.SocketPanel;
 import br.com.dsd.app.server.gui.panel.HeadPanel;
 import br.com.dsd.app.server.gui.panel.InfoPanel;
 
@@ -42,6 +42,7 @@ public class Main extends JFrame {
 				| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
+		getRootPane().setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, 800, 480);
@@ -62,7 +63,7 @@ public class Main extends JFrame {
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		contentPane.add(splitPane, BorderLayout.CENTER);
 
-		pnlForm = new FormPanel();
+		pnlForm = new SocketPanel();
 		splitPane.setLeftComponent(pnlForm);
 
 		pnlInfo = new InfoPanel();

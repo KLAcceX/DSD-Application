@@ -14,10 +14,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import br.com.dsd.app.client.entity.dto.GroupDTO;
-import br.com.dsd.app.client.entity.dto.UserDTO;
 import br.com.dsd.app.client.gui.main.panel.ChatPanel;
 import br.com.dsd.app.client.helper.IconUtil;
+import br.com.dsd.app.dto.GroupDTO;
+import br.com.dsd.app.dto.UserDTO;
 
 /**
  * Painel que cuida da apresentação de cada contato

@@ -9,7 +9,6 @@ public class IconConstants {
 	public static final String GROUPS 			=  "groups_32px";
 	public static final String HOME 			=  "home_32px";
 	public static final String PLUS 			=  "plus_32px";
-	public static final String SETTINGS 		=  "settings_32px";
 	public static final String TV_OFF 			=  "tv_off_32px";
 	public static final String TV_ON 			=  "tv_on_32px";
 	

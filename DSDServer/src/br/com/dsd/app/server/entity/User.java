@@ -1,11 +1,16 @@
-package br.com.dsd.app.server.entity.dao;
+package br.com.dsd.app.server.entity;
 
-import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 /**
@@ -15,9 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tb_user")
-public class UserDAO implements Serializable {
-
-	private static final long serialVersionUID = -3769038376481481901L;
+public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,37 +29,37 @@ public class UserDAO implements Serializable {
 	private String name;
 	private String surname;
 	private String email;
+	private String password;
 	private Character status;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "tb_group_user", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "id") })
+	private Set<Group> groups = new HashSet<>();
 
-	public UserDAO() {
+	public User() {
 
 	}
 
-	public UserDAO(Integer id, String nickname, String name, String surname, String email, Character status) {
+	public User(Integer id, String nickname, String name, String surname, String email, String password,
+			Character status) {
 		super();
 		this.id = id;
 		this.nickname = nickname;
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
+		this.password = password;
 		this.status = status;
 	}
-	
-	public UserDAO(String nickname, String name, String surname, String email, Character status) {
+
+	public User(String nickname, String name, String surname, String email, String password, Character status) {
 		super();
 		this.nickname = nickname;
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
+		this.password = password;
 		this.status = status;
-	}
-	
-	public UserDAO(String nickname, String name, String surname, String email) {
-		super();
-		this.nickname = nickname;
-		this.name = name;
-		this.surname = surname;
-		this.email = email;
 	}
 
 	public Integer getId() {
@@ -91,10 +94,6 @@ public class UserDAO implements Serializable {
 		this.surname = surname;
 	}
 
-	public String getEntireName() {
-		return this.name + " " + this.surname;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -103,12 +102,32 @@ public class UserDAO implements Serializable {
 		this.email = email;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public Character getStatus() {
 		return status;
 	}
 
 	public void setStatus(Character status) {
 		this.status = status;
+	}
+
+	public String getEntireName() {
+		return this.name + " " + this.surname;
+	}
+
+	public Set<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
 	}
 
 }

@@ -15,27 +15,44 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 
-import br.com.dsd.app.server.dao.GenericDAO;
-import br.com.dsd.app.server.entity.dao.GroupDAO;
-import br.com.dsd.app.server.entity.dao.UserDAO;
+import br.com.dsd.app.server.dao.GroupDAO;
+import br.com.dsd.app.server.dao.UserDAO;
+import br.com.dsd.app.server.dao.factory.DAOFactory;
+import br.com.dsd.app.server.entity.Group;
+import br.com.dsd.app.server.entity.User;
+import br.com.dsd.app.server.gui.dialog.Message;
 import br.com.dsd.app.server.helper.Constants;
 import br.com.dsd.app.server.helper.IconUtil;
+import br.com.dsd.app.server.helper.MD5Util;
+import br.com.dsd.app.server.helper.Util;
+import br.com.dsd.app.server.message.Logger;
 
 /**
  * Painel que contêm as informações do servidor (Log e Usuários)
@@ -47,7 +64,12 @@ public class InfoPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private JTextArea txtLog;
+	private UserDAO userDAO;
+	private GroupDAO groupDAO;
+
+	private JTabbedPane tabbedPane;
+
+	private JTextPane txtLog;
 	private JTable tblUsers;
 	private JTable tblGroups;
 
@@ -60,23 +82,37 @@ public class InfoPanel extends JPanel {
 	private JPanel pnlGroupTable;
 	private JPanel pnlGroupAdd;
 	private JTextField txtUserNickname = new JTextField();
+	private JPasswordField txtUserPassword = new JPasswordField();
 	private JTextField txtUserName = new JTextField();
 	private JTextField txtUserSurname = new JTextField();
 	private JTextField txtUserEmail = new JTextField();
 	private JTextField txtGroupName = new JTextField();
 
-	/**
-	 * Create the panel.
-	 */
 	public InfoPanel() {
+		DAOFactory daoFactory = DAOFactory.getFactory();
+		userDAO = daoFactory.getUserDAO();
+		groupDAO = daoFactory.getGroupDAO();
+
 		setBackground(Color.BLACK);
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBackground(Color.WHITE);
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		add(tabbedPane);
 
+		criarPaineis();
+		carregarUsuarios();
+		carregarGrupos();
+	}
+
+	private void criarPaineis() {
+		criarPainelLog();
+		criarPainelUsuario();
+		criarPainelGrupo();
+	}
+
+	private void criarPainelLog() {
 		JPanel pnlLog = new JPanel();
 		tabbedPane.addTab(TAB_LOG, null, pnlLog, TOOLTIP_TAB_LOG);
 		pnlLog.setLayout(new BoxLayout(pnlLog, BoxLayout.X_AXIS));
@@ -84,9 +120,17 @@ public class InfoPanel extends JPanel {
 		JScrollPane sclLog = new JScrollPane();
 		pnlLog.add(sclLog);
 
-		txtLog = new JTextArea();
-		sclLog.setViewportView(txtLog);
+		txtLog = new JTextPane();
+		Style logStyle = txtLog.addStyle("logStyle", null);
+		StyleConstants.setForeground(logStyle, Color.BLACK);
 
+		Style errStyle = txtLog.addStyle("errStyle", null);
+		StyleConstants.setForeground(errStyle, Color.RED);
+
+		sclLog.setViewportView(txtLog);
+	}
+
+	private void criarPainelUsuario() {
 		JPanel pnlUsers = new JPanel();
 		tabbedPane.addTab(TAB_USER, null, pnlUsers, TOOLTIP_TAB_USER);
 		pnlUsers.setLayout(new BorderLayout(0, 0));
@@ -115,70 +159,85 @@ public class InfoPanel extends JPanel {
 		pnlUsersOperation.add(pnlUserTable, "Table");
 
 		pnlUserAdd = new JPanel(new GridBagLayout());
+		pnlUserAdd.setFocusable(true);
+		pnlUserAdd.requestFocusInWindow();
 		GridBagConstraints gbcUser = new GridBagConstraints();
 		gbcUser.anchor = GridBagConstraints.EAST;
 		gbcUser.insets = new Insets(10, 10, 10, 10);
 		gbcUser.weightx = 1.;
 		gbcUser.fill = GridBagConstraints.HORIZONTAL;
-		
+
 		gbcUser.gridx = 0;
 		gbcUser.gridy = 0;
 		pnlUserAdd.add(new JLabel("Nickname"), gbcUser);
-		
+
 		gbcUser.gridx = 1;
 		txtUserNickname.setColumns(50);
 		pnlUserAdd.add(txtUserNickname, gbcUser);
-		
+
 		gbcUser.gridx = 0;
 		gbcUser.gridy = 1;
+		pnlUserAdd.add(new JLabel("Password"), gbcUser);
+
+		gbcUser.gridx = 1;
+		pnlUserAdd.add(txtUserPassword, gbcUser);
+
+		gbcUser.gridx = 0;
+		gbcUser.gridy = 2;
 		pnlUserAdd.add(new JLabel("Name"), gbcUser);
-		
+
 		gbcUser.gridx = 1;
 		txtUserName.setColumns(50);
 		pnlUserAdd.add(txtUserName, gbcUser);
-		
+
 		gbcUser.gridx = 0;
-		gbcUser.gridy = 2;
+		gbcUser.gridy = 3;
 		pnlUserAdd.add(new JLabel("Surname"), gbcUser);
-		
+
 		gbcUser.gridx = 1;
 		txtUserSurname.setColumns(50);
 		pnlUserAdd.add(txtUserSurname, gbcUser);
-		
+
 		gbcUser.gridx = 0;
-		gbcUser.gridy = 3;
+		gbcUser.gridy = 4;
 		pnlUserAdd.add(new JLabel("Email"), gbcUser);
-		
+
 		gbcUser.gridx = 1;
 		txtUserEmail.setColumns(50);
 		pnlUserAdd.add(txtUserEmail, gbcUser);
-		
+
 		gbcUser.gridx = 0;
-		gbcUser.gridy = 4;
+		gbcUser.gridy = 5;
 		gbcUser.gridwidth = 2;
+		gbcUser.fill = GridBagConstraints.BOTH;
 		gbcUser.anchor = GridBagConstraints.CENTER;
 		JButton btnAddUser = new JButton("Adicionar");
 		btnAddUser.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				UserDAO user = new UserDAO(txtUserNickname.getText(), txtUserName.getText(), txtUserSurname.getText(), txtUserEmail.getText());
-				GenericDAO.insert(user);
-				getTxtLog().append("Adicionando Usuário");
-				adicionarUsuarioTabela(user);
-				txtUserNickname.setText("");
-				txtUserName.setText("");
-				txtUserSurname.setText("");
-				txtUserEmail.setText("");
-				userCardLayout.next(pnlUsersOperation);
+				efetuarOperacoesAdicionarUsuario();
 			}
 		});
 		btnAddUser.setBorder(BorderFactory.createEmptyBorder());
 		btnAddUser.setBackground(Color.WHITE);
 		pnlUserAdd.add(btnAddUser, gbcUser);
-		
+
+		InputMap inputUserMap = pnlUserAdd.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		ActionMap actionUserMap = pnlUserAdd.getActionMap();
+		inputUserMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "submitUserForm");
+		actionUserMap.put("submitUserForm", new AbstractAction("submitUserForm") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				efetuarOperacoesAdicionarUsuario();
+			}
+
+		});
+
 		JScrollPane sclAddUser = new JScrollPane(pnlUserAdd);
 		pnlUsersOperation.add(sclAddUser, "Add");
-		
+
 		JButton btnAdicionarUser = new JButton();
 		btnAdicionarUser.addMouseListener(new MouseAdapter() {
 			@Override
@@ -189,9 +248,11 @@ public class InfoPanel extends JPanel {
 		btnAdicionarUser.setBorder(BorderFactory.createEmptyBorder());
 		btnAdicionarUser.setBackground(Color.WHITE);
 		btnAdicionarUser.setIcon(IconUtil.getIcon(ADD_USER));
-		
-		pnlUserAction.add(btnAdicionarUser);
 
+		pnlUserAction.add(btnAdicionarUser);
+	}
+
+	private void criarPainelGrupo() {
 		JPanel pnlGroups = new JPanel();
 		tabbedPane.addTab(TAB_GROUP, null, pnlGroups, TOOLTIP_TAB_GROUP);
 		pnlGroups.setLayout(new BorderLayout(0, 0));
@@ -201,7 +262,7 @@ public class InfoPanel extends JPanel {
 
 		JPanel pnlGroupAction = new JPanel();
 		pnlGroupAction.setBackground(Color.WHITE);
-		FlowLayout flowLayoutGroup = (FlowLayout) pnlUserAction.getLayout();
+		FlowLayout flowLayoutGroup = (FlowLayout) pnlGroupAction.getLayout();
 		flowLayoutGroup.setAlignment(FlowLayout.RIGHT);
 		pnlGroups.add(pnlGroupAction, BorderLayout.NORTH);
 
@@ -216,7 +277,7 @@ public class InfoPanel extends JPanel {
 		pnlGroupTable.setLayout(new BorderLayout(0, 0));
 		tblGroups.setModel(groupTableModel);
 		pnlGroupTable.add(sclGroups);
-		
+
 		pnlGroupsOperation.add(pnlGroupTable, "Table");
 
 		pnlGroupAdd = new JPanel(new GridBagLayout());
@@ -225,40 +286,48 @@ public class InfoPanel extends JPanel {
 		gbcGroup.insets = new Insets(10, 10, 10, 10);
 		gbcGroup.weightx = 1.;
 		gbcGroup.fill = GridBagConstraints.HORIZONTAL;
-		
+
 		gbcGroup.gridx = 0;
 		gbcGroup.gridy = 0;
 		pnlGroupAdd.add(new JLabel("Nickname"), gbcGroup);
-		
+
 		gbcGroup.gridx = 1;
 		txtGroupName.setColumns(50);
 		pnlGroupAdd.add(txtGroupName, gbcGroup);
-		
+
 		gbcGroup.gridx = 0;
 		gbcGroup.gridy = 1;
 		gbcGroup.gridwidth = 2;
+		gbcGroup.fill = GridBagConstraints.BOTH;
 		gbcGroup.anchor = GridBagConstraints.CENTER;
 		JButton btnAddGroup = new JButton("Adicionar");
 		btnAddGroup.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				GroupDAO group = new GroupDAO(txtGroupName.getText());
-				GenericDAO.insert(group);
-				getTxtLog().append("Adicionando Grupo");
-				adicionarGrupoTabela(group);
-				txtGroupName.setText("");
-				groupCardLayout.next(pnlGroupsOperation);
+				efetuarOperacoesAdicionarGrupo();
 			}
 		});
 		btnAddGroup.setBorder(BorderFactory.createEmptyBorder());
 		btnAddGroup.setBackground(Color.WHITE);
 		pnlGroupAdd.add(btnAddGroup, gbcGroup);
-		
+
+		InputMap inputGroupMap = pnlGroupAdd.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		ActionMap actionGroupMap = pnlGroupAdd.getActionMap();
+		inputGroupMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "submitGroupForm");
+		actionGroupMap.put("submitGroupForm", new AbstractAction("submitGroupForm") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				efetuarOperacoesAdicionarGrupo();
+			}
+
+		});
+
 		JScrollPane sclAddGroup = new JScrollPane(pnlGroupAdd);
 		pnlGroupsOperation.add(sclAddGroup, "Add");
-		
+
 		JButton btnAdicionarGroup = new JButton();
-		// TODO: Método para Adicionar o Grupo
 		btnAdicionarGroup.setBorder(BorderFactory.createEmptyBorder());
 		btnAdicionarGroup.setBackground(Color.WHITE);
 		btnAdicionarGroup.setIcon(IconUtil.getIcon(ADD_USER));
@@ -270,24 +339,23 @@ public class InfoPanel extends JPanel {
 		});
 
 		pnlGroupAction.add(btnAdicionarGroup);
-
-		carregarUsuarios();
-		carregarGrupos();
 	}
 
-	public JTextArea getTxtLog() {
+	public JTextPane getTxtLog() {
 		return txtLog;
 	}
 
 	private void carregarUsuarios() {
-		List<UserDAO> users = (List<UserDAO>) GenericDAO.list(UserDAO.class);
+		userDAO.beginTransaction();
+		List<User> users = (List<User>) userDAO.listAll();
+		userDAO.commitTransaction();
 
-		for (UserDAO user : users) {
+		for (User user : users) {
 			adicionarUsuarioTabela(user);
 		}
 	}
 
-	private void adicionarUsuarioTabela(UserDAO user) {
+	private void adicionarUsuarioTabela(User user) {
 		Object[] row = new Object[Constants.COLUNAS_TABELA_INFO_USUARIOS.length];
 		row[0] = user.getNickname();
 		row[1] = user.getEntireName();
@@ -297,18 +365,68 @@ public class InfoPanel extends JPanel {
 	}
 
 	private void carregarGrupos() {
-		List<GroupDAO> groups = (List<GroupDAO>) GenericDAO.list(GroupDAO.class);
+		groupDAO.beginTransaction();
+		List<Group> groups = (List<Group>) groupDAO.listAll();
+		groupDAO.commitTransaction();
 
-		for (GroupDAO group : groups) {
+		for (Group group : groups) {
 			adicionarGrupoTabela(group);
 		}
 	}
 
-	private void adicionarGrupoTabela(GroupDAO group) {
+	private void adicionarGrupoTabela(Group group) {
 		Object[] row = new Object[Constants.COLUNAS_TABELA_INFO_GRUPOS.length];
 		row[0] = group.getName();
 
 		((DefaultTableModel) tblGroups.getModel()).insertRow(tblGroups.getRowCount(), row);
+	}
+
+	private void efetuarOperacoesAdicionarUsuario() {
+		if (Util.isNotNullFields(txtUserNickname, txtUserName, txtUserSurname, txtUserEmail)) {
+
+			try {
+				User user = new User(txtUserNickname.getText(), txtUserName.getText(), txtUserSurname.getText(),
+						txtUserEmail.getText(), MD5Util.convert(new String(txtUserPassword.getPassword())), 'I');
+				adicionarUsuario(user);
+				Util.clearFields(txtUserNickname, txtUserPassword, txtUserName, txtUserSurname, txtUserEmail);
+			} catch (NoSuchAlgorithmException e) {
+				Message.createMessage("Problemas ao processar as informações do usuário.");
+			}
+		}
+	}
+
+	private void adicionarUsuario(User user) {
+		userDAO.beginTransaction();
+		boolean adicionado = userDAO.save(user);
+		userDAO.commitTransaction();
+		if (adicionado) {
+			Logger.log("Usuário " + user.getNickname() + " adicionado.");
+			adicionarUsuarioTabela(user);
+			userCardLayout.next(pnlUsersOperation);
+		} else {
+			Message.createMessage("Usuário com apelido ou e-mail já existente.");
+		}
+	}
+
+	private void efetuarOperacoesAdicionarGrupo() {
+		if (Util.isNotNullFields(txtGroupName)) {
+			Group group = new Group(txtGroupName.getText());
+			adicionarGrupo(group);
+			Util.clearFields(txtGroupName);
+		}
+	}
+
+	private void adicionarGrupo(Group group) {
+		groupDAO.beginTransaction();
+		boolean adicionado = groupDAO.save(group);
+		groupDAO.commitTransaction();
+		if (adicionado) {
+			Logger.log("Usuário " + group.getName() + " adicionado.");
+			adicionarGrupoTabela(group);
+			groupCardLayout.next(pnlGroupsOperation);
+		} else {
+			Message.createMessage("Grupo com este nome já existe.");
+		}
 	}
 
 }

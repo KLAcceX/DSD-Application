@@ -4,9 +4,9 @@ import java.awt.EventQueue;
 
 import br.com.dsd.app.server.gui.Main;
 
-public class Application {
+public class ServerApplication {
 
-	private Application() {
+	private ServerApplication() {
 	}
 
 	public static void main(String[] args) {

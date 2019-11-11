@@ -31,6 +31,7 @@ public class HeadPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	private JLabel lblApplicationName;
 	private Point initialClick;
 	private JLabel lblClose;
 
@@ -43,7 +44,7 @@ public class HeadPanel extends JPanel {
 		lblClose.setIcon(IconUtil.getIcon(CLOSE_WINDOW));
 		lblClose.addMouseListener(new MouseCloseClickHandler());
 
-		JLabel lblApplicationName = new JLabel("DSD-WS-Client-App");
+		lblApplicationName = new JLabel("DSD-WS-Client-App");
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup().addGap(5)
@@ -120,6 +121,10 @@ public class HeadPanel extends JPanel {
 		public void mouseClicked(MouseEvent e) {
 			System.exit(0);
 		}
+	}
+	
+	public void setText(String user) {
+		lblApplicationName.setText("DSD-WS-Client-App - " + user);
 	}
 
 }

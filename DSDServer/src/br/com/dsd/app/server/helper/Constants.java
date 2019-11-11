@@ -8,6 +8,7 @@ package br.com.dsd.app.server.helper;
  */
 public class Constants {
 
+	public static final Integer MAX_PORT = 65535;
 	public static final String[] COLUNAS_TABELA_INFO_USUARIOS = { "Apelido", "Nome", "E-mail" };
 	public static final String[] COLUNAS_TABELA_INFO_GRUPOS = { "Nome" };
 	public static final String FIELD_IP = "IP";

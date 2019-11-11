@@ -3,7 +3,6 @@ package br.com.dsd.app.client.gui.frame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -16,13 +15,13 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
-import br.com.dsd.app.client.entity.dto.UserDTO;
 import br.com.dsd.app.client.gui.main.panel.ChatPanel;
 import br.com.dsd.app.client.gui.main.panel.ContactsPanel;
 import br.com.dsd.app.client.gui.main.panel.FootPanel;
 import br.com.dsd.app.client.gui.main.panel.GroupsPanel;
 import br.com.dsd.app.client.gui.main.panel.HeadPanel;
 import br.com.dsd.app.client.gui.main.panel.MenuPanel;
+import br.com.dsd.app.dto.UserDTO;
 
 /**
  * Janela da aplicação
@@ -34,7 +33,7 @@ import br.com.dsd.app.client.gui.main.panel.MenuPanel;
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private static MainFrame mainFrame;
 	private static UserDTO loggedUser;
 	private boolean maximized = false;
@@ -44,8 +43,14 @@ public class MainFrame extends JFrame {
 	private JScrollPane pnlSclContacts;
 	private JScrollPane pnlSclGroups;
 	
+	private HeadPanel pnlHead;
+	private FootPanel pnlFoot;
+	private GroupsPanel pnlGroups;
+	private ContactsPanel pnlContacts;
+	private ChatPanel pnlChat;
+
 	public static MainFrame getInstance() {
-		if(mainFrame == null)
+		if (mainFrame == null)
 			mainFrame = new MainFrame();
 		return mainFrame;
 	}
@@ -62,6 +67,7 @@ public class MainFrame extends JFrame {
 				| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
+		getRootPane().setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, 800, 480);
@@ -70,11 +76,11 @@ public class MainFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
-		JPanel pnlHead = new HeadPanel();
+		pnlHead = new HeadPanel();
 		pnlHead.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
 		contentPane.add(pnlHead, BorderLayout.NORTH);
 
-		JPanel pnlFoot = new FootPanel();
+		pnlFoot = new FootPanel();
 		pnlFoot.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
 		contentPane.add(pnlFoot, BorderLayout.SOUTH);
 
@@ -82,7 +88,7 @@ public class MainFrame extends JFrame {
 		contentPane.add(pnlContent, BorderLayout.CENTER);
 		pnlContent.setLayout(new BorderLayout(0, 0));
 
-		JPanel pnlChat = new ChatPanel();
+		pnlChat = new ChatPanel();
 		pnlChat.setMinimumSize(new Dimension(300, getHeight()));
 
 		JPanel pnlMenu = new MenuPanel();
@@ -93,11 +99,11 @@ public class MainFrame extends JFrame {
 		splitPane = new JSplitPane();
 		pnlContent.add(splitPane, BorderLayout.CENTER);
 
-		JPanel pnlGroups = new GroupsPanel((ChatPanel) pnlChat);
+		pnlGroups = new GroupsPanel((ChatPanel) pnlChat);
 		pnlSclGroups = new JScrollPane(pnlGroups);
 		pnlSclGroups.setMinimumSize(new Dimension(300, getHeight()));
 
-		JPanel pnlContacts = new ContactsPanel((ChatPanel) pnlChat);
+		pnlContacts = new ContactsPanel((ChatPanel) pnlChat);
 		pnlSclContacts = new JScrollPane(pnlContacts);
 		pnlSclContacts.setMinimumSize(new Dimension(300, getHeight()));
 
@@ -132,23 +138,36 @@ public class MainFrame extends JFrame {
 	public UserDTO getLoggedUser() {
 		return loggedUser;
 	}
-	
+
 	public void setLoggedUser(UserDTO user) {
 		loggedUser = user;
+		pnlHead.setText(loggedUser.getNickname());
 	}
-	
+
 	public void maximize() {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		maximized = true;
 	}
-	
+
 	public void minimize() {
 		this.setExtendedState(JFrame.NORMAL);
 		maximized = false;
 	}
-	
+
 	public boolean isMaximized() {
 		return maximized;
+	}
+
+	public GroupsPanel getPnlGroups() {
+		return pnlGroups;
+	}
+
+	public ContactsPanel getPnlContacts() {
+		return pnlContacts;
+	}
+
+	public ChatPanel getPnlChat() {
+		return pnlChat;
 	}
 
 }

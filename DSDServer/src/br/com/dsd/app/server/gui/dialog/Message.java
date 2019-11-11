@@ -1,4 +1,4 @@
-package br.com.dsd.app.client.gui.dialog;
+package br.com.dsd.app.server.gui.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,7 +16,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
-import br.com.dsd.app.client.gui.main.panel.HeadPanel;
+import br.com.dsd.app.server.gui.panel.HeadPanel;
 
 public class Message extends JDialog {
 
@@ -25,16 +25,18 @@ public class Message extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 
 	private static Message message = null;
-	private static JLabel lblMessage;
+	private JLabel lblMessage;
 
 	public static void createMessage(String msg) {
 		if (message == null)
-			message = new Message();
-		lblMessage.setText(msg);
+			message = new Message(msg);
 		message.setVisible(true);
 	}
 
 	private Message() {
+	}
+
+	private Message(String message) {
 		setTitle("DSD-WS-Client");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -58,7 +60,7 @@ public class Message extends JDialog {
 			contentPanel.add(pnlMessage, BorderLayout.CENTER);
 			pnlMessage.setLayout(new BorderLayout(0, 0));
 			{
-				lblMessage = new JLabel();
+				lblMessage = new JLabel(message);
 				lblMessage.setHorizontalAlignment(SwingConstants.CENTER);
 				pnlMessage.add(lblMessage, BorderLayout.CENTER);
 			}

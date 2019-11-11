@@ -5,12 +5,10 @@ import static br.com.dsd.app.client.helper.Constants.LEFT_ARROWS;
 import static br.com.dsd.app.client.helper.Constants.MENU_CONTACTS;
 import static br.com.dsd.app.client.helper.Constants.MENU_EXIT;
 import static br.com.dsd.app.client.helper.Constants.MENU_GROUPS;
-import static br.com.dsd.app.client.helper.Constants.MENU_SETTINGS;
 import static br.com.dsd.app.client.helper.Constants.RIGHT_ARROWS;
 import static br.com.dsd.app.client.helper.IconConstants.CONTACTS;
 import static br.com.dsd.app.client.helper.IconConstants.EXIT;
 import static br.com.dsd.app.client.helper.IconConstants.GROUPS;
-import static br.com.dsd.app.client.helper.IconConstants.SETTINGS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,9 +22,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import br.com.dsd.app.client.executable.Application;
+import br.com.dsd.app.client.executable.ClientApplication;
 import br.com.dsd.app.client.gui.component.ColoredMenuBar;
 import br.com.dsd.app.client.helper.IconUtil;
+import br.com.dsd.app.client.socket.Client;
 
 public class MenuPanel extends JPanel {
 
@@ -38,7 +37,6 @@ public class MenuPanel extends JPanel {
 	private JMenuBar menuBar;
 	private JMenu menuContacts;
 	private JMenu menuGroups;
-	private JMenu menuSettings;
 	private JMenu menuExit;
 
 	/**
@@ -67,15 +65,12 @@ public class MenuPanel extends JPanel {
 		menuGroups.setIcon(IconUtil.getIcon(GROUPS));
 		menuBar.add(menuGroups);
 
-		menuSettings = new JMenu(MENU_SETTINGS);
-		menuSettings.setIcon(IconUtil.getIcon(SETTINGS));
-		menuBar.add(menuSettings);
-
 		menuExit = new JMenu(MENU_EXIT);
 		menuExit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Application.changeFrameLogin();
+				Client.unkeep();
+				ClientApplication.changeFrameLogin();
 			}
 		});
 		menuExit.setIcon(IconUtil.getIcon(EXIT));
@@ -105,7 +100,6 @@ public class MenuPanel extends JPanel {
 
 			menuContacts.setText(open ? EMPTY_STRING : MENU_CONTACTS);
 			menuGroups.setText(open ? EMPTY_STRING : MENU_GROUPS);
-			menuSettings.setText(open ? EMPTY_STRING : MENU_SETTINGS);
 			menuExit.setText(open ? EMPTY_STRING : MENU_EXIT);
 			open = !open;
 		}

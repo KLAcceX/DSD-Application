@@ -1,20 +1,21 @@
 package br.com.dsd.app.client.executable;
 
 import java.awt.EventQueue;
+import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 
 import br.com.dsd.app.client.gui.frame.LoginFrame;
 import br.com.dsd.app.client.gui.frame.MainFrame;
 
-public class Application {
+public class ClientApplication {
 
 	private static JFrame jframe;
 
-	private Application() {
+	private ClientApplication() {
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -32,7 +33,7 @@ public class Application {
 		jframe = MainFrame.getInstance();
 		jframe.setVisible(true);
 	}
-	
+
 	public static void changeFrameLogin() {
 		jframe.dispose();
 		jframe = LoginFrame.getInstance();

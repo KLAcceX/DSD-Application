@@ -1,4 +1,4 @@
-package br.com.dsd.app.client.helper;
+package br.com.dsd.app.server.helper;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -8,10 +8,6 @@ public class MD5Util {
 
 	private static final String MD5 = "MD5";
 
-	public static String convert(char[] chars) throws NoSuchAlgorithmException {
-		return convert(new String(chars));
-	}
-	
 	public static String convert(String str) throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance(MD5);
 		md.update(str.getBytes(), 0, str.length());

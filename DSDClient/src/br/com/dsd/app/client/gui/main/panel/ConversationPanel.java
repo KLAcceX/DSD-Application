@@ -14,13 +14,14 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
-import br.com.dsd.app.client.entity.dto.MessageDTO;
-import br.com.dsd.app.client.entity.dto.UserDTO;
 import br.com.dsd.app.client.gui.frame.MainFrame;
 import br.com.dsd.app.client.helper.DateUtil;
+import br.com.dsd.app.client.socket.Client;
+import br.com.dsd.app.dto.MessageDTO;
 
 /**
  * Um dos paineis de conversação
@@ -29,15 +30,17 @@ import br.com.dsd.app.client.helper.DateUtil;
  *
  */
 public class ConversationPanel extends JSplitPane {
-	
-	private static final long serialVersionUID = 1L;
-	
-	private JTextPane txtMessage;
-	private JTextPane txtChat;
 
-	public ConversationPanel() {
+	private static final long serialVersionUID = 1L;
+
+	private String tabName = "";
+	private JTextPane txtMessage;
+	private JTextArea txtChat;
+
+	public ConversationPanel(String tabName) {
 		setOrientation(JSplitPane.VERTICAL_SPLIT);
 
+		this.tabName = tabName;
 		JPanel pnlMessage = new JPanel();
 		pnlMessage.setLayout(new BorderLayout(0, 0));
 		JPanel pnlAction = new JPanel();
@@ -75,7 +78,7 @@ public class ConversationPanel extends JSplitPane {
 		JPanel pnlText = new JPanel();
 		pnlText.setLayout(new BorderLayout(0, 0));
 
-		txtChat = new JTextPane();
+		txtChat = new JTextArea();
 		txtChat.setEditable(false);
 		JScrollPane txtSclChat = new JScrollPane(txtChat);
 		txtSclChat.setMinimumSize(new Dimension(getWidth(), 200));
@@ -84,7 +87,6 @@ public class ConversationPanel extends JSplitPane {
 		setLeftComponent(pnlText);
 		setRightComponent(pnlMessage);
 		setDividerLocation(0.2);
-		enviarMensagem("Teste");
 	}
 
 	/**
@@ -93,12 +95,9 @@ public class ConversationPanel extends JSplitPane {
 	 * @param mensagem
 	 */
 	public void enviarMensagem(String mensagem) {
-		MessageDTO message = new MessageDTO(MainFrame.getInstance().getLoggedUser(), new UserDTO(), new Date(), mensagem);
-		// TODO: ENVIAR MENSAGEM PARA DESTINATÁRIO, MÉTODO RETORNANDO BOOLEAN
-		// CASO TRUE : MENSAGEM ENVIADA
-		// CASO FALSE : MENSAGEM COM ERRO
-
-		if (true) { // colocar aqui o método
+		MessageDTO message = new MessageDTO(tabName, MainFrame.getInstance().getLoggedUser().getNickname(), new Date(),
+				mensagem);
+		if (Client.sendMessage(message)) {
 			adicionarMensagem(message);
 		}
 	}
@@ -109,8 +108,8 @@ public class ConversationPanel extends JSplitPane {
 	 * @param mensagem
 	 */
 	public void adicionarMensagem(MessageDTO mensagem) {
-		txtChat.setText("[" + mensagem.getSender().getNickname() + " " + DateUtil.getChatDate(mensagem.getSendDate())
-				+ "] : " + mensagem.getText() + "\n");
+		txtChat.append("[" + mensagem.getSender() + " " + DateUtil.getChatDate(mensagem.getSendDate()) + "] : "
+				+ mensagem.getText() + "\n");
 	}
 
 }

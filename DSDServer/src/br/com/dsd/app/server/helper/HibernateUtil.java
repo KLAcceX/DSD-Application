@@ -2,6 +2,7 @@ package br.com.dsd.app.server.helper;
 
 import java.io.File;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -12,6 +13,7 @@ public class HibernateUtil {
 
 	private static StandardServiceRegistry registry;
 	private static SessionFactory sessionFactory;
+	private static Session session;
 
 	public static SessionFactory getSessionFactory() {
 		if (sessionFactory == null) {
@@ -34,5 +36,30 @@ public class HibernateUtil {
 		if (registry != null) {
 			StandardServiceRegistryBuilder.destroy(registry);
 		}
+	}
+
+	public static Session getSession() {
+		if (session == null)
+			session = getSessionFactory().openSession();
+		return session;
+	}
+
+	public static void beginTransaction() {
+		if (!getSession().getTransaction().isActive())
+			getSession().beginTransaction();
+	}
+
+	public static void commitTransaction() {
+		synchronized(getSession()) {
+			getSession().getTransaction().commit();
+		}
+	}
+
+	public static void rollBackTransaction() {
+		getSession().getTransaction().rollback();
+	}
+
+	public static void closeSession() {
+		getSession().close();
 	}
 }
