@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class LoginDTO implements Serializable {
 	
-	private static final long serialVersionUID = 7532064910432844004L;
+	private static final long serialVersionUID = -4522810588593876598L;
 	
 	private String username;
 	private String password;

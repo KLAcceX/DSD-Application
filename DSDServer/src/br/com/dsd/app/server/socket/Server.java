@@ -2,8 +2,10 @@ package br.com.dsd.app.server.socket;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,6 +16,10 @@ import java.util.Map.Entry;
 import br.com.dsd.app.dto.GroupDTO;
 import br.com.dsd.app.dto.MessageDTO;
 import br.com.dsd.app.dto.UserDTO;
+import br.com.dsd.app.server.dao.ServerInfoDAO;
+import br.com.dsd.app.server.dao.factory.DAOFactory;
+import br.com.dsd.app.server.entity.ServerInfo;
+import br.com.dsd.app.server.entity.ServerInfo.ServerInfoPK;
 import br.com.dsd.app.server.message.Logger;
 
 public class Server extends Thread {
@@ -22,14 +28,24 @@ public class Server extends Thread {
 
 	private static List<Connector> connectors;
 	private static Map<String, ObjectOutputStream> clients;
+	private static int port = 0;
 	private static ServerSocket serverSocket = null;
+	private static ServerInfoDAO serverInfoDAO;
+	private static ServerInfo serverInfo;
 
 	private Server(int port) {
 		try {
+			DAOFactory daoFactory = DAOFactory.getFactory();
+			serverInfoDAO = daoFactory.getServerInfoDAO();
+			serverInfoDAO.beginTransaction();
+			serverInfo = new ServerInfo(new ServerInfoPK(InetAddress.getLocalHost().getHostAddress(), port));
+			serverInfoDAO.save(serverInfo);
+			serverInfoDAO.commitTransaction();
 			serverSocket = new ServerSocket(port);
 			connectors = new ArrayList<Connector>();
 			clients = new HashMap<String, ObjectOutputStream>();
-			Logger.log("Servidor ativo na porta " + port);
+			Server.port = port;
+			Logger.log("Servidor iniciado na porta " + port + ".");
 			start();
 		} catch (IOException e) {
 			Logger.err("Não foi possível se conectar no servidor com a porta " + port + ".");
@@ -45,16 +61,25 @@ public class Server extends Thread {
 	public void run() {
 		try {
 			while (true) {
+				Logger.log("Aguardando cliente.");
 				Socket connection = serverSocket.accept();
 				Logger.log("Nova conexão com o cliente " + connection.getInetAddress().getHostAddress() + ".");
-				Connector thread = new Connector(connection);
-				if (thread != null) {
-					connectors.add(thread);
-					clients.put(thread.getUser().getNickname(), thread.getOuts());
+				try {
+					connection.getOutputStream();
+					connection.getInputStream();
+					Connector thread = new Connector(connection);
+					if (thread != null && thread.getConnection().isConnected() && thread.getUser() != null) {
+						connectors.add(thread);
+						clients.put(thread.getUser().getNickname(), thread.getOuts());
+					}
+				}catch(SocketException e) {
+					Logger.err("Problema com as streams do cliente " + connection.getInetAddress().getHostAddress() + ".");
 				}
 			}
+		} catch (SocketException e) {
+			Logger.log("Servidor será desligado.");
 		} catch (IOException e) {
-			Logger.log("Servidor desligado.");
+			Logger.log("Servidor será desligado.");
 		}
 	}
 
@@ -72,10 +97,10 @@ public class Server extends Thread {
 				}
 			}
 		} catch (IOException e) {
-			unkeep();
+			Logger.err("Problema ao enviar Usuário.");
 		}
 	}
-	
+
 	public static synchronized void sendToAll(GroupDTO group) {
 		try {
 			synchronized (clients) {
@@ -88,7 +113,7 @@ public class Server extends Thread {
 				}
 			}
 		} catch (IOException e) {
-			unkeep();
+			Logger.err("Problema ao enviar informações de Grupos.");
 		}
 	}
 
@@ -106,18 +131,16 @@ public class Server extends Thread {
 				}
 			}
 		} catch (IOException e) {
-			unkeep();
+			Logger.err("Problema ao enviar Mensagem.");
 		}
 	}
 
 	public synchronized static void unkeep() {
 		try {
-			synchronized(connectors) {
-				for(Iterator<Connector> iterator = connectors.iterator(); iterator.hasNext(); ) {
-					Connector connector = iterator.next();
-					connector.unkeep();
-				}
-			}
+			serverInfoDAO.beginTransaction();
+			serverInfoDAO.delete(serverInfo);
+			serverInfoDAO.commitTransaction();
+			removeFromConnections(null);
 			serverSocket.close();
 			server = null;
 		} catch (IOException e) {
@@ -139,21 +162,21 @@ public class Server extends Thread {
 
 	protected synchronized static void removeFromConnections(String nickname) {
 		synchronized (connectors) {
-			for(Iterator<Connector> iterator = connectors.iterator(); iterator.hasNext(); ) {
+			for (Iterator<Connector> iterator = connectors.iterator(); iterator.hasNext();) {
 				Connector connector = iterator.next();
-				if(connector.getUser().getNickname().equals(nickname)) {
+				if (connector.getUser().getNickname().equals(nickname)) {
 					iterator.remove();
 				}
+				if(nickname == null) connector.closeConnection();
 			}
-//			for (Connector connector : connectors) {
-//				if (connector.getUser().getNickname().equals(nickname))
-//					connectors.remove(connector);
-//
-//			}
 		}
 		synchronized (clients) {
 			clients.remove(nickname);
 		}
+	}
+
+	public static int getPort() {
+		return port;
 	}
 
 }

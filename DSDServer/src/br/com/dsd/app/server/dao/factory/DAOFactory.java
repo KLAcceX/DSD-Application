@@ -3,6 +3,7 @@ package br.com.dsd.app.server.dao.factory;
 import java.lang.reflect.InvocationTargetException;
 
 import br.com.dsd.app.server.dao.GroupDAO;
+import br.com.dsd.app.server.dao.ServerInfoDAO;
 import br.com.dsd.app.server.dao.UserDAO;
 
 public abstract class DAOFactory {
@@ -32,4 +33,6 @@ public abstract class DAOFactory {
 	public abstract UserDAO getUserDAO();
 	
 	public abstract GroupDAO getGroupDAO();
+	
+	public abstract ServerInfoDAO getServerInfoDAO();
 }

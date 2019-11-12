@@ -210,7 +210,7 @@ public class SocketPanel extends JPanel {
 			}
 			break;
 		case 80:
-			Server.getInstance(Integer.parseInt(txtPort.getText())).unkeep();
+			Server.unkeep();
 			txtPort.setEnabled(true);
 			btnServer.setMnemonic(73);
 			btnServer.setText(BUTTON_START);

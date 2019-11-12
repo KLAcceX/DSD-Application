@@ -9,5 +9,6 @@
 		<property name="show_sql">true</property>
 		<mapping class="br.com.dsd.app.server.entity.User"/>
 		<mapping class="br.com.dsd.app.server.entity.Group"/>
+		<mapping class="br.com.dsd.app.server.entity.ServerInfo"/>
 	</session-factory>
 </hibernate-configuration>

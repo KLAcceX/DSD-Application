@@ -35,6 +35,7 @@ public class ClientApplication {
 	}
 
 	public static void changeFrameLogin() {
+		MainFrame.getInstance().getPnlChat().closeTabs();
 		jframe.dispose();
 		jframe = LoginFrame.getInstance();
 		jframe.setVisible(true);

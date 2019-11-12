@@ -3,6 +3,7 @@ package br.com.dsd.app.client.socket;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -13,6 +14,7 @@ import br.com.dsd.app.dto.GroupDTO;
 import br.com.dsd.app.dto.InformationDTO;
 import br.com.dsd.app.dto.LoginDTO;
 import br.com.dsd.app.dto.MessageDTO;
+import br.com.dsd.app.dto.RedirectDTO;
 import br.com.dsd.app.dto.UserDTO;
 
 public class Client extends Thread {
@@ -20,15 +22,31 @@ public class Client extends Thread {
 	private static Client client;
 
 	private static volatile boolean keep = false;
-	private Socket socket;
+	private static Socket socket;
 	private static ObjectOutputStream outs;
-	private ObjectInputStream ins;
+	private static ObjectInputStream ins;
+	private static RedirectDTO redirect;
+	private static LoginDTO login;
 
-	private Client(String ip, String port, LoginDTO login) {
+	private Client(String ip, String port) {
 		try {
-			socket = new Socket(ip, Integer.parseInt(port));
-			outs = new ObjectOutputStream(socket.getOutputStream());
-			ins = new ObjectInputStream(socket.getInputStream());
+			for (int i = 0; i < 3; i++) {
+				try {
+					socket = new Socket();
+					socket.connect(new InetSocketAddress(ip, Integer.parseInt(port)), 10000);
+					outs = new ObjectOutputStream(socket.getOutputStream());
+					ins = new ObjectInputStream(socket.getInputStream());
+					break;
+				} catch (IOException e) {
+					ins.close();
+					outs.close();
+					socket.close();
+				}
+			}
+			if(socket == null) {
+				Message.createMessage("Host não encontrado!");
+				return;
+			}
 			outs.writeObject(login);
 			outs.flush();
 			Object obj = ins.readObject();
@@ -40,7 +58,11 @@ public class Client extends Thread {
 				mainFrame.getPnlContacts().addUsers(information.getUsers());
 				mainFrame.setLoggedUser(information.getLoggedUser());
 				keep = true;
+				redirect = null;
 				start();
+			} else if (obj instanceof RedirectDTO) {
+				RedirectDTO redirect = (RedirectDTO) obj;
+				Client.redirect = redirect;
 			} else {
 				Message.createMessage("Usuário ou senha inválidos.");
 			}
@@ -56,10 +78,14 @@ public class Client extends Thread {
 	}
 
 	public static Client getInstance(String ip, String port, LoginDTO login) {
+		Client.login = login;
 		if (!keep)
 			client = null;
 		if (client == null)
-			client = new Client(ip, port, login);
+			client = new Client(ip, port);
+		if (redirect != null) {
+			client = new Client(redirect.getIp(), redirect.getPort().toString());
+		}
 		return client;
 	}
 
@@ -73,16 +99,25 @@ public class Client extends Thread {
 					MainFrame.getInstance().getPnlGroups().addGroup((GroupDTO) obj);
 				} else if (obj instanceof MessageDTO) {
 					MainFrame.getInstance().getPnlChat().adicionarMensagem((MessageDTO) obj);
+				} else if (obj instanceof RedirectDTO) {
+					RedirectDTO redirect = (RedirectDTO) obj;
+					unkeep();
+					Client.redirect = redirect;
 				}
 			}
 		} catch (ClassNotFoundException e) {
 			Message.createMessage("Houve problemas com a mensagem recebida pelo servidor.");
 		} catch (IOException e) {
-			Message.createMessage("Houve problemas de conexão com o servidor.");
+			if (keep) {
+				Message.createMessage("Houve problemas de conexão com o servidor.");
+			}
+		}		
+		if(Client.redirect == null) {
+			client = null;
+			ClientApplication.changeFrameLogin();
+		}else {
+			client = new Client(redirect.getIp(), redirect.getPort().toString());
 		}
-		Message.createMessage("Conexão com o servidor foi encerrada.");
-		client = null;
-		ClientApplication.changeFrameLogin();
 	}
 
 	public static boolean sendMessage(MessageDTO message) {
@@ -97,7 +132,17 @@ public class Client extends Thread {
 	}
 
 	public static void unkeep() {
-		keep = false;
+		try {
+			keep = false;
+			if (socket != null) {
+				ins.close();
+				outs.close();
+				socket.close();
+			}
+			socket = null;
+		} catch (IOException e) {
+			Message.createMessage("Tentativa de fechar uma conexão que não está mais aberta.");
+		}
 	}
 
 }

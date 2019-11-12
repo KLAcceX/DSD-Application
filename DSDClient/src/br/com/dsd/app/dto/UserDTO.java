@@ -8,8 +8,8 @@ import java.io.Serializable;
  * @author kl
  */
 public class UserDTO implements Serializable {
-
-	private static final long serialVersionUID = -2583419618774793272L;
+	
+	private static final long serialVersionUID = 4575402042368392792L;
 	
 	private Integer id;
 	private String nickname;

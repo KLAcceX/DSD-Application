@@ -48,13 +48,13 @@ public class ConversationPanel extends JSplitPane {
 		pnlMessage.add(pnlAction, BorderLayout.NORTH);
 		pnlMessage.setMinimumSize(new Dimension(getWidth(), 100));
 
-		JButton btnEmote = new JButton(ACTION_EMOTE);
-		btnEmote.setHorizontalAlignment(SwingConstants.LEFT);
-		pnlAction.add(btnEmote);
-
-		JButton btnFile = new JButton(ACTION_FILE);
-		btnFile.setHorizontalAlignment(SwingConstants.LEFT);
-		pnlAction.add(btnFile);
+//		JButton btnEmote = new JButton(ACTION_EMOTE);
+//		btnEmote.setHorizontalAlignment(SwingConstants.LEFT);
+//		pnlAction.add(btnEmote);
+//
+//		JButton btnFile = new JButton(ACTION_FILE);
+//		btnFile.setHorizontalAlignment(SwingConstants.LEFT);
+//		pnlAction.add(btnFile);
 
 		txtMessage = new JTextArea();
 		txtMessage.setLineWrap(true);

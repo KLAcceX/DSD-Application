@@ -16,6 +16,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
 
 import br.com.dsd.app.server.helper.IconUtil;
+import br.com.dsd.app.server.socket.Server;
 
 /**
  * Painel do cabeçalho da aplicação
@@ -103,6 +104,7 @@ public class HeadPanel extends JPanel {
 	private class MouseClickHandler extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			Server.unkeep();
 			System.exit(0);
 		}
 	}

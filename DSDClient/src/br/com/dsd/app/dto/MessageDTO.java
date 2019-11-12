@@ -5,8 +5,8 @@ import java.util.Date;
 
 public class MessageDTO implements Serializable {
 
-	private static final long serialVersionUID = 3742414013272046137L;
-
+	private static final long serialVersionUID = -7485228062695874771L;
+	
 	private String receiver;
 	private String sender;
 	private Date sendDate;

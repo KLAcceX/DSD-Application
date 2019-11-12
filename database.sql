@@ -48,3 +48,19 @@ TABLESPACE pg_default;
 
 ALTER TABLE public.tb_group
     OWNER to postgres;
+
+-- Table: public.tb_server_info
+
+-- DROP TABLE public.tb_server_info;
+
+CREATE TABLE public.tb_server_info
+(
+    ip character varying COLLATE pg_catalog."default" NOT NULL,
+    port integer NOT NULL,
+    CONSTRAINT tb_server_info_pkey PRIMARY KEY (ip, port)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.tb_server_info
+    OWNER to postgres;
