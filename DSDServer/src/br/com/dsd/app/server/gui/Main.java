@@ -2,7 +2,6 @@ package br.com.dsd.app.server.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -13,9 +12,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import br.com.dsd.app.server.gui.panel.FootPanel;
-import br.com.dsd.app.server.gui.panel.SocketPanel;
 import br.com.dsd.app.server.gui.panel.HeadPanel;
 import br.com.dsd.app.server.gui.panel.InfoPanel;
+import br.com.dsd.app.server.gui.panel.SocketPanel;
 
 /**
  * Janela da aplicação

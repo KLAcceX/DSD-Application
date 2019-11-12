@@ -15,14 +15,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 import br.com.dsd.app.client.gui.frame.MainFrame;
 import br.com.dsd.app.client.helper.DateUtil;
 import br.com.dsd.app.client.socket.Client;
 import br.com.dsd.app.dto.MessageDTO;
-import javax.swing.ScrollPaneConstants;
 
 /**
  * Um dos paineis de conversação

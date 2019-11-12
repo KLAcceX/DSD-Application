@@ -6,7 +6,6 @@ import javax.persistence.criteria.Root;
 
 import br.com.dsd.app.server.dao.GroupDAO;
 import br.com.dsd.app.server.entity.Group;
-import br.com.dsd.app.server.gui.dialog.Message;
 import br.com.dsd.app.server.helper.HibernateUtil;
 
 public class HibernateGroupDAO extends HibernateDAO<Group, Long> implements GroupDAO {

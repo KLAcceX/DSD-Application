@@ -9,7 +9,6 @@ import javax.persistence.criteria.Root;
 import br.com.dsd.app.dto.LoginDTO;
 import br.com.dsd.app.server.dao.UserDAO;
 import br.com.dsd.app.server.entity.User;
-import br.com.dsd.app.server.gui.dialog.Message;
 import br.com.dsd.app.server.helper.HibernateUtil;
 
 public class HibernateUserDAO extends HibernateDAO<User, Long> implements UserDAO {

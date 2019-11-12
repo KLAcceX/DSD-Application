@@ -33,7 +33,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-import br.com.dsd.app.server.gui.dialog.Message;
 import br.com.dsd.app.server.socket.Server;
 
 /**
