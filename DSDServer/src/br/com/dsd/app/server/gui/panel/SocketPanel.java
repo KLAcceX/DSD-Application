@@ -11,16 +11,23 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -47,6 +54,22 @@ public class SocketPanel extends JPanel {
 		generateLayout();
 		generateFields();
 		generateButton();
+		generateAction();
+	}
+
+	private void generateAction() {
+		InputMap inputUserMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		ActionMap actionUserMap = getActionMap();
+		inputUserMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "submitForm");
+		actionUserMap.put("submitForm", new AbstractAction("submitForm") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startServer();
+			}
+
+		});
 	}
 
 	/**
@@ -173,23 +196,26 @@ public class SocketPanel extends JPanel {
 	private class ButtonListener extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			startServer();
+		}
+	}
 
-			switch (btnServer.getMnemonic()) {
-			case 73:
-				Server.getInstance(Integer.parseInt(txtPort.getText()));
-				if (Server.isOn()) {
-					txtPort.setEnabled(false);
-					btnServer.setMnemonic(80);
-					btnServer.setText(BUTTON_STOP);
-				}
-				break;
-			case 80:
-				Server.getInstance(Integer.parseInt(txtPort.getText())).unkeep();
-				txtPort.setEnabled(true);
-				btnServer.setMnemonic(73);
-				btnServer.setText(BUTTON_START);
-				break;
+	private void startServer() {
+		switch (btnServer.getMnemonic()) {
+		case 73:
+			Server.getInstance(Integer.parseInt(txtPort.getText()));
+			if (Server.isOn()) {
+				txtPort.setEnabled(false);
+				btnServer.setMnemonic(80);
+				btnServer.setText(BUTTON_STOP);
 			}
+			break;
+		case 80:
+			Server.getInstance(Integer.parseInt(txtPort.getText())).unkeep();
+			txtPort.setEnabled(true);
+			btnServer.setMnemonic(73);
+			btnServer.setText(BUTTON_START);
+			break;
 		}
 	}
 

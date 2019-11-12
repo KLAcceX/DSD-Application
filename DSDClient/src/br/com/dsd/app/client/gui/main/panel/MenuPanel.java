@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 
 import br.com.dsd.app.client.executable.ClientApplication;
 import br.com.dsd.app.client.gui.component.ColoredMenuBar;
+import br.com.dsd.app.client.gui.frame.MainFrame;
 import br.com.dsd.app.client.helper.IconUtil;
 import br.com.dsd.app.client.socket.Client;
 
@@ -70,6 +71,7 @@ public class MenuPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Client.unkeep();
+				MainFrame.getInstance().getPnlChat().closeTabs();
 				ClientApplication.changeFrameLogin();
 			}
 		});

@@ -3,7 +3,6 @@ package br.com.dsd.app.client.gui.main.panel;
 import static br.com.dsd.app.client.helper.IconConstants.CLOSE_WINDOW;
 
 import java.awt.Color;
-import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,8 +10,6 @@ import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -20,6 +17,7 @@ import javax.swing.SwingUtilities;
 
 import br.com.dsd.app.client.gui.frame.MainFrame;
 import br.com.dsd.app.client.helper.IconUtil;
+import br.com.dsd.app.client.socket.Client;
 
 /**
  * Painel do cabeçalho da aplicação
@@ -119,6 +117,7 @@ public class HeadPanel extends JPanel {
 	private class MouseCloseClickHandler extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			Client.unkeep();
 			System.exit(0);
 		}
 	}

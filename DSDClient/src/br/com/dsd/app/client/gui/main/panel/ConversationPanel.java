@@ -22,6 +22,7 @@ import br.com.dsd.app.client.gui.frame.MainFrame;
 import br.com.dsd.app.client.helper.DateUtil;
 import br.com.dsd.app.client.socket.Client;
 import br.com.dsd.app.dto.MessageDTO;
+import javax.swing.ScrollPaneConstants;
 
 /**
  * Um dos paineis de conversação
@@ -34,7 +35,7 @@ public class ConversationPanel extends JSplitPane {
 	private static final long serialVersionUID = 1L;
 
 	private String tabName = "";
-	private JTextPane txtMessage;
+	private JTextArea txtMessage;
 	private JTextArea txtChat;
 
 	public ConversationPanel(String tabName) {
@@ -56,7 +57,8 @@ public class ConversationPanel extends JSplitPane {
 		btnFile.setHorizontalAlignment(SwingConstants.LEFT);
 		pnlAction.add(btnFile);
 
-		txtMessage = new JTextPane();
+		txtMessage = new JTextArea();
+		txtMessage.setLineWrap(true);
 		txtMessage.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -73,12 +75,14 @@ public class ConversationPanel extends JSplitPane {
 			}
 		});
 		JScrollPane txtSclMessage = new JScrollPane(txtMessage);
+		txtSclMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		pnlMessage.add(txtSclMessage);
 
 		JPanel pnlText = new JPanel();
 		pnlText.setLayout(new BorderLayout(0, 0));
 
 		txtChat = new JTextArea();
+		txtChat.setLineWrap(true);
 		txtChat.setEditable(false);
 		JScrollPane txtSclChat = new JScrollPane(txtChat);
 		txtSclChat.setMinimumSize(new Dimension(getWidth(), 200));

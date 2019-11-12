@@ -58,5 +58,9 @@ public class ChatPanel extends JPanel {
 		ConversationPanel pnlConversation = tabNames.get(nickname);
 		pnlConversation.adicionarMensagem(message);
 	}
+	
+	public void closeTabs() {
+		pnlTabs.removeAll();
+	}
 
 }

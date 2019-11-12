@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import br.com.dsd.app.client.executable.ClientApplication;
 import br.com.dsd.app.client.gui.dialog.Message;
 import br.com.dsd.app.client.gui.frame.MainFrame;
+import br.com.dsd.app.dto.GroupDTO;
 import br.com.dsd.app.dto.InformationDTO;
 import br.com.dsd.app.dto.LoginDTO;
 import br.com.dsd.app.dto.MessageDTO;
@@ -68,6 +69,8 @@ public class Client extends Thread {
 				Object obj = ins.readObject();
 				if (obj instanceof UserDTO) {
 					MainFrame.getInstance().getPnlContacts().addUser((UserDTO) obj);
+				} else if (obj instanceof GroupDTO) {
+					MainFrame.getInstance().getPnlGroups().addGroup((GroupDTO) obj);
 				} else if (obj instanceof MessageDTO) {
 					MainFrame.getInstance().getPnlChat().adicionarMensagem((MessageDTO) obj);
 				}
@@ -78,6 +81,7 @@ public class Client extends Thread {
 			Message.createMessage("Houve problemas de conexão com o servidor.");
 		}
 		Message.createMessage("Conexão com o servidor foi encerrada.");
+		client = null;
 		ClientApplication.changeFrameLogin();
 	}
 

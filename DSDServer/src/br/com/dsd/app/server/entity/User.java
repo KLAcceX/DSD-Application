@@ -31,10 +31,6 @@ public class User {
 	private String email;
 	private String password;
 	private Character status;
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "tb_group_user", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "id") })
-	private Set<Group> groups = new HashSet<>();
 
 	public User() {
 
@@ -120,14 +116,6 @@ public class User {
 
 	public String getEntireName() {
 		return this.name + " " + this.surname;
-	}
-
-	public Set<Group> getGroups() {
-		return groups;
-	}
-
-	public void setGroups(Set<Group> groups) {
-		this.groups = groups;
 	}
 
 }

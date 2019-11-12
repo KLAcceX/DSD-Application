@@ -18,8 +18,6 @@ public class Group {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
-	@ManyToMany(mappedBy = "groups")
-	private Set<User> users = new HashSet<>();
 
 	public Group() {
 		super();
@@ -51,13 +49,5 @@ public class Group {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public Set<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<User> users) {
-		this.users = users;
-	}
-
+	
 }

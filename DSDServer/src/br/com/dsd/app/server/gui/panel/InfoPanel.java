@@ -48,11 +48,13 @@ import br.com.dsd.app.server.dao.factory.DAOFactory;
 import br.com.dsd.app.server.entity.Group;
 import br.com.dsd.app.server.entity.User;
 import br.com.dsd.app.server.gui.dialog.Message;
+import br.com.dsd.app.server.helper.BuilderUtil;
 import br.com.dsd.app.server.helper.Constants;
 import br.com.dsd.app.server.helper.IconUtil;
 import br.com.dsd.app.server.helper.MD5Util;
 import br.com.dsd.app.server.helper.Util;
 import br.com.dsd.app.server.message.Logger;
+import br.com.dsd.app.server.socket.Server;
 
 /**
  * Painel que contêm as informações do servidor (Log e Usuários)
@@ -121,6 +123,7 @@ public class InfoPanel extends JPanel {
 		pnlLog.add(sclLog);
 
 		txtLog = new JTextPane();
+		txtLog.setEditable(false);
 		Style logStyle = txtLog.addStyle("logStyle", null);
 		StyleConstants.setForeground(logStyle, Color.BLACK);
 
@@ -403,6 +406,7 @@ public class InfoPanel extends JPanel {
 			Logger.log("Usuário " + user.getNickname() + " adicionado.");
 			adicionarUsuarioTabela(user);
 			userCardLayout.next(pnlUsersOperation);
+			Server.sendToAll(BuilderUtil.convertToDTO(user), null);
 		} else {
 			Message.createMessage("Usuário com apelido ou e-mail já existente.");
 		}
@@ -421,9 +425,10 @@ public class InfoPanel extends JPanel {
 		boolean adicionado = groupDAO.save(group);
 		groupDAO.commitTransaction();
 		if (adicionado) {
-			Logger.log("Usuário " + group.getName() + " adicionado.");
+			Logger.log("Grupo " + group.getName() + " adicionado.");
 			adicionarGrupoTabela(group);
 			groupCardLayout.next(pnlGroupsOperation);
+			Server.sendToAll(BuilderUtil.convertToDTO(group));
 		} else {
 			Message.createMessage("Grupo com este nome já existe.");
 		}
