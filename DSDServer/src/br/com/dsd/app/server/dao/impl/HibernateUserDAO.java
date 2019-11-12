@@ -1,5 +1,6 @@
 package br.com.dsd.app.server.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -47,8 +48,8 @@ public class HibernateUserDAO extends HibernateDAO<User, Long> implements UserDA
 		criteria.select(root);
 		criteria.where(
 				builder.or(builder.equal(root.get("nickname"), nickname), builder.equal(root.get("email"), email)));
-		return (User) HibernateUtil.getSession().createQuery(criteria).getResultList().stream().findFirst()
-				.orElse(null);
+		List<User> users = new ArrayList<>(HibernateUtil.getSession().createQuery(criteria).getResultList());
+		return (User) users.stream().findFirst().orElse(null);
 	}
 
 	@Override
